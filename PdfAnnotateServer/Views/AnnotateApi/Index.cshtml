@@ -1,0 +1,25 @@
+﻿@model AnnotateIndexModel
+
+
+
+
+@*<img src="@String.Format("data:image/png;base64,{0}", Model.Byt)"/>*@
+
+
+<img style="width: 50vw;" id="image" src="@Url.Content($"~/Images/{Model.Path}" )" />
+
+
+@* 
+    all movements will be saved as percentages x = 0% left x = 100% right, y = 0% Top y = 100% bottom
+    will convert values to inches inside server when pdf size is found
+    
+*@
+<script>
+    var example = document.getElementById('image');
+    example.onmousemove = function (e) {
+        var x = e.pageX - this.offsetLeft;
+        var y = e.pageY - this.offsetTop;
+    }
+
+
+</script>

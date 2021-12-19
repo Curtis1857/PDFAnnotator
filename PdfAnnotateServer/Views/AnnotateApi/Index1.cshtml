@@ -1,0 +1,128 @@
+﻿@model AnnotateIndexModel
+
+
+
+@*<img id="myImage" src="@String.Format("data:image/png;base64,{0}", Model.Byt)"/>*@
+
+<button type="button" class="btn btn-success">Add Line</button>
+<img id="myImage" style="display: none; width: 10vw;" id="image" src="@Url.Content($"~/Images/{Model.Path}" )" />
+<canvas style="width: 50vw; height: 100vh" id="canvas"></canvas>
+@*<img style="width: 50vw;" id="image" src="" />*@
+
+
+@*
+    all movements will be saved as percentages x = 0% left x = 100% right, y = 0% Top y = 100% bottom
+    will convert values to inches inside server when pdf size is found
+
+*@
+<script src="@Url.Content("~/js/fabricF.js")"></script>
+<script>
+    var c = document.getElementById("canvas");
+    var ctx = c.getContext("2d");
+
+
+
+    @*make_base();
+    //te()
+    function make_base() {
+        base_image = new Image();
+        base_image.src = `@Url.Content($"~/Images/{Model.Path}")`;
+        console.log(base_image)
+        
+        base_image.onload = function () {
+            //c.width = c.clientWidth;
+            //c.width = (50 * window.innerHeight / 100) * .5;
+            /*c.width = this.width;*/
+            //c.height = this.height;
+            console.log(this.width )
+            console.log(this.height )
+            c.width = this.width / 3;
+            c.height = this.height / 3;
+            //c.height = c.clientHeight;
+            //ctx.drawImage(base_image, 0, 0, c.clientWidth, c.clientHeight)
+            ctx.drawImage(base_image, 0, 0, this.width / 3, this.height / 3)
+
+        }
+    }*@
+
+    //heres the plan
+    //add lines to pdf they can be moved by either end of line by circles that appear or get darker on hover
+    //when placed the postion of both ends is saved by x y percentage 
+    //hit save these values are send to server turned into proper unit and the pdf is stamped
+
+    //1: button that adds line to page with circles on either side
+    //2: when moving around save location of line and name
+    //3: send line location to server
+    //4: convert values to unit and send through service
+
+
+    window.onload = function () {
+        ctx.fillStyle = "#FF0000";
+        //te()
+    }
+
+    var canF = this.__canvas = new fabric.Canvas('canvas', {
+        width: c.clientWidth,
+        height: c.clientHeight,
+        selection: false
+    });
+
+    var imgElement = document.getElementById('myImage');
+    var imgInstance = new fabric.Image(imgElement, {
+        left: 0,
+        top: 0,
+        selectable: false,
+        evented: false,
+        //angle: ,
+        //opacity: 0.85,
+        //width: 200,
+    });
+
+    //imgInstance.scale(.5);
+    imgInstance.scaleToWidth(c.clientWidth);
+    canF.add(imgInstance);
+    lineTop = makeLine([0, 0, 400, 0])
+    canF.add(lineTop);
+
+    function makeLine(coords) {
+        const Line = new fabric.Line(coords, {
+            fill: 'red',
+            stroke: 'red',
+            strokeWidth: 5,
+            selectable: true,
+            evented: true,
+            offsetX: 10,
+            original2: newXY(),
+            original1: newXY()
+
+        });
+        Line.original1.set({ x: Line.x1, y: Line.y1 })
+        Line.original2.set({ x: Line.x2, y: Line.y2 })
+        return Line
+    }
+
+    function newXY() {
+        return {
+            x: 0,
+            y: 0,
+            set(a) {
+                if (a.x) this.x = a.x;
+                if (a.y) this.y = a.y;
+            }
+        }
+    }
+    //function te() {
+    //    ctx.fillRect(20, 20, 150, 100);
+    //    ctx.beginPath();
+    //    ctx.moveTo(0, 0);
+    //    ctx.lineTo(300, 150);
+    //    ctx.stroke();
+    //}
+    //var example = document.getElementById('image');
+    //example.onmousemove = function (e) {
+    //    var x = e.pageX - this.offsetLeft;
+    //    var y = e.pageY - this.offsetTop;
+    //}
+
+
+</script>

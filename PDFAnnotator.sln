@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31624.102
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PDFAnnotator", "PDFEditor\PDFAnnotator.csproj", "{194D81B3-9149-45E7-96FF-F88D32A5FCE3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iTextEasyCS", "iTextEasyCS\iTextEasyCS.csproj", "{53BF9ECA-E4B5-4D9C-92AD-566F114AB91B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PdfAnnotatorEasy", "PdfAnnotatorEasy\PdfAnnotatorEasy.csproj", "{7ECA5359-8FEB-4365-B228-AF9D803F9FC3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PdfAnnotateServer", "PdfAnnotateServer\PdfAnnotateServer.csproj", "{ABA75585-E436-44F1-A069-D74C725DA2E6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +15,18 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{194D81B3-9149-45E7-96FF-F88D32A5FCE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{194D81B3-9149-45E7-96FF-F88D32A5FCE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{194D81B3-9149-45E7-96FF-F88D32A5FCE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{194D81B3-9149-45E7-96FF-F88D32A5FCE3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{53BF9ECA-E4B5-4D9C-92AD-566F114AB91B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53BF9ECA-E4B5-4D9C-92AD-566F114AB91B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53BF9ECA-E4B5-4D9C-92AD-566F114AB91B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53BF9ECA-E4B5-4D9C-92AD-566F114AB91B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7ECA5359-8FEB-4365-B228-AF9D803F9FC3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7ECA5359-8FEB-4365-B228-AF9D803F9FC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7ECA5359-8FEB-4365-B228-AF9D803F9FC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7ECA5359-8FEB-4365-B228-AF9D803F9FC3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ABA75585-E436-44F1-A069-D74C725DA2E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ABA75585-E436-44F1-A069-D74C725DA2E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ABA75585-E436-44F1-A069-D74C725DA2E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ABA75585-E436-44F1-A069-D74C725DA2E6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
