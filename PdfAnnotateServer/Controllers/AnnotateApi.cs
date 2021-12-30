@@ -78,20 +78,21 @@ namespace PdfAnnotateServer.Controllers
         }
 
         [HttpPost]
-        public IActionResult AnnotatePdf(List<AnnotateInstruction> instructions)
+        public IActionResult AnnotatePdf(testerHolder instructions)
         {
-            var oldPath = @"C:\Users\curti\source\repos\PDFAnnotator\PdfAnnotatorEasy\Pdfs\order_6.pdf";
-            var newPath = @"C:\Users\curti\source\repos\PDFAnnotator\PdfAnnotatorEasy\Pdfs\order_6Temp3.pdf";
+            
+            //var oldPath = @"C:\Users\curti\source\repos\PDFAnnotator\PdfAnnotatorEasy\Pdfs\order_6.pdf";
+            //var newPath = @"C:\Users\curti\source\repos\PDFAnnotator\PdfAnnotatorEasy\Pdfs\order_6Temp3.pdf";
 
-            var x = new PDFWriter();
-            x.ScaleMode = ScaleModes.Inches;
+            //var x = new PDFWriter();
+            //x.ScaleMode = ScaleModes.Inches;
 
-            //var instructions = new List<AnnotateInstruction> {
-            //    new AnnotateInstruction{ MethodName ="Line", X1 = .1f, Y1 = .1f, X2 = 4, Y2 = 4 },
-            //    new AnnotateInstruction{ MethodName = "Write",  X1 = .1f, Y1 = 1f, Text = "this is fucking awesome" }
-            //};
+            ////var instructions = new List<AnnotateInstruction> {
+            ////    new AnnotateInstruction{ MethodName ="Line", X1 = .1f, Y1 = .1f, X2 = 4, Y2 = 4 },
+            ////    new AnnotateInstruction{ MethodName = "Write",  X1 = .1f, Y1 = 1f, Text = "this is fucking awesome" }
+            ////};
 
-            x.AnnotatePdf(oldPath, newPath, instructions);
+            //x.AnnotatePdf(oldPath, newPath, instructions);
             return View();
         }
     }
