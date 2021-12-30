@@ -14,12 +14,23 @@ namespace iTextEasyCS
         public float Y1 { get; set; }
         public float X2 { get; set; }
         public float Y2 { get; set; }
+        public string Unit { get; set; }
         public float Radius { get; set; }
         public string Color { get; set; }
         public string Text { get; set; }
         public bool Fill { get; set; }
     }
+    public class Tester
+    {
+        public float X1 { get; set; }
+    }
 
+    public class testerHolder
+    {
+        public List<Tester> YEP { get; set; }
+        public List<float> Nope { get; set; }
+        public float COW { get; set; }
+    }
     partial class PDFWriter
     {
         public void AnnotatePdf(string originalFile, string annotatedfile, List<AnnotateInstruction> Instructions)
