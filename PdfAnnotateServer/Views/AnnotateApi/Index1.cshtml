@@ -1,9 +1,5 @@
 ﻿@model AnnotateIndexModel
 
-
-
-@*<img id="myImage" src="@String.Format("data:image/png;base64,{0}", Model.Byt)"/>*@
-
 <button type="button" id="AddLine" class="btn btn-success" data-line-Index="0" >Add Line</button>
 <button type="button" id="save"> save</button>
 <canvas style="width: 80vw; height: 100vh" id="canvas"></canvas>
@@ -21,9 +17,6 @@
 
 <script src="@Url.Content("~/js/fabricF.js")"></script>
 <script>
-    var c = document.getElementById("canvas");
-    //var ctx = c.getContext("2d");
-
     //heres the plan
     //add lines to pdf they can be moved by either end of line by circles that appear or get darker on hover
     //when placed the postion of both ends is saved by x y percentage
@@ -33,88 +26,11 @@
     //2: when moving around save location of line and name
     //3: send line location to server
     //4: convert values to unit and send through service
-
-
-    //window.onload = function () {
-    //    ctx.fillStyle = "#FF0000";
-    //    //te()
-    //}
-    $("#save").click((e) => {
-        console.log(AnnoLineList)
-        var instructions = JSON.stringify(AnnoLineList)
-        var test = { "X1": 3 }
-        var formData = new FormData();
-        formData.append("YEP[0].X1", 2);
-        formData.append("YEP[1].X1", 3);
-        formData.append("YEP[2].X1", 4);
-        formData.append("COW", 3);
-        formData.append("Nope", 3);
-        formData.append("Nope", 8);
-        formData.append("Nope", 9);
-        $.ajax(
-            {
-                type: "Post",
-                url: "@Url.Action(nameof(AnnotateApi.AnnotatePdf), "AnnotateApi")",
-                //data: JSON.stringify({ YEP: [{ X1: 3 }, { X1: 4 }, { X1: 7 }], COW: 10}) ,
-                data: formData,
-                processData: false,
-                contentType: false,
-                //data: JSON.stringify({ 'instructions': AnnoLineList }),
-                //contentType: "application/json; charset=utf-8",
-                dataType: "text",
-                //data: AnnoLineList,
-                //contentType: 'application/json; charset=utf-8',
-                //dataType: "text",
-                success: function (data) {
-                            }
-            });
-    })
     var AnnoLineList = []
     var ImageSize = {}
-    //{x1, y1, x2, y2}
 
-    $("#AddLine").click((e) => {
-        var $target = $(e.target)
-        var annotateLineIndex = Number($target.attr("data-line-Index"))
-        MakeLineAnnotation(annotateLineIndex)
-        $target.attr("data-line-Index", annotateLineIndex + 1)
-
-
-
-
-    })
-
-    function MakeLineAnnotation(index) {
-        lineTop = makeLine([250, 250, 400, 250])
-        AnnoLineList.push({ X1: 250, Y1: 250, X2: 400, Y2: 250 })
-        circleL = makeCircle(lineTop.get('x1'), lineTop.get('y1'), index, "LeftLine")
-        circleR = makeCircle(lineTop.get('x2'), lineTop.get('y2'), index, "RightLine")
-        canF.add(lineTop);
-        canF.add(circleL, circleR);
-    }
-
-    function updateLineList(index, p ) {
-        p.RightLine && assignRight()
-        p.LeftLine && assignLeft()
-
-        function assignRight() {
-            AnnoLineList[index].Y2 = p.RightLine.y2
-            AnnoLineList[index].X2 = p.RightLine.x2
-            AnnoLineList[index].Color = "red"
-
-            AnnoLineList[index].Y2Percent = p.RightLine.y2 * ImageSize["heightPercent"]
-            AnnoLineList[index].X2Percent = p.RightLine.x2 * ImageSize["widthPercent"]
-        }
-
-        function assignLeft() {
-            AnnoLineList[index].Y1 = p.LeftLine.y1
-            AnnoLineList[index].X1 = p.LeftLine.x1
-
-            AnnoLineList[index].Y1Percent = p.LeftLine.y1 * ImageSize["heightPercent"]
-            AnnoLineList[index].X1Percent = p.LeftLine.x1 * ImageSize["widthPercent"]
-        
-        }
-    }
+    var c = document.getElementById("canvas");
+    fabric.Object.prototype.originX = fabric.Object.prototype.originY = 'center';
 
     var canF = this.__canvas = new fabric.Canvas('canvas', {
         width: c.clientWidth,
@@ -122,39 +38,17 @@
         selection: false
     });
 
-    canF.on('object:moving', function (e) {
-        var p = e.target;
-        
-        p.RightLine && p.RightLine.set({ 'x2': p.left, 'y2': p.top });
-        p.LeftLine && p.LeftLine.set({ 'x1': p.left, 'y1': p.top });
-        updateLineList(p.lineIndex, p)
-        canF.renderAll();
-    });
-
-    canF.on('object:moved', function (e) {
-        var p = e.target;
-        console.table(AnnoLineList)
-        console.table(ImageSize)
-        p.RightLine && console.log(` Left: x ${p.RightLine.x2} , y ${p.RightLine.y2}`)
-        p.LeftLine && console.log(` Left: x ${p.LeftLine.x1} , y ${p.LeftLine.y1}`)
-    });
-
-
-    fabric.Object.prototype.originX = fabric.Object.prototype.originY = 'center';
-        //    fabric.Object.prototype.originX = 'left';
-        //fabric.Object.prototype.originY = 'top';
-    //fabric.Object.prototype.originX = 'center';
-    //fabric.Object.prototype.originY = 'center';
-
     fabric.Image.fromURL("@Url.Content($"~/Images/{Model.Path}" )", function (oImg) {
+
+        //scalels image to fit window and centers
         var hundredPercent = 1 / oImg.getScaledWidth()
-        oImg.scale(hundredPercent * c.clientWidth)        
-        var p = oImg
-        p.set({ left: oImg.getScaledWidth() / 2, top: oImg.getScaledHeight() / 2 });
+        oImg.scale(hundredPercent * c.clientWidth)
+        oImg.set({ left: oImg.getScaledWidth() / 2, top: oImg.getScaledHeight() / 2 });
         canF.add(oImg);
+
+        //all cordinates are 0 - 1 based off percentages
         ImageSize["width"] = oImg.getScaledWidth()
         ImageSize["height"] = oImg.getScaledHeight()
-
         ImageSize["heightPercent"] = 1 / oImg.getScaledHeight()
         ImageSize["widthPercent"] = 1 / oImg.getScaledWidth()
 
@@ -163,20 +57,86 @@
         evented: false,
     });
 
+    $("#save").click((e) => {
+        var formData = new FormData();
+        var index = 0
+        for (var intstuction of AnnoLineList) {
+            for (var prop of Object.getOwnPropertyNames(intstuction)) {
+                formData.append(`instructions[${index}].${prop}`, intstuction[prop]);
+            }
 
+            index++
+        }
+        $.ajax(
+            {
+                type: "Post",
+                url: "@Url.Action(nameof(AnnotateApi.AnnotatePdfPercentCords), "AnnotateApi")",
+                data: formData,
+                processData: false,
+                contentType: false,
+                dataType: "text",
+                success: function (data) {
+                            }
+            });
+    })
+
+    $("#AddLine").click((e) => {
+        var $target = $(e.target)
+        var annotateLineIndex = Number($target.attr("data-line-Index"))
+        MakeLineAnnotation(annotateLineIndex)
+        $target.attr("data-line-Index", annotateLineIndex + 1)
+    })
+
+    canF.on('object:moving', function (e) {
+        var p = e.target;
+
+        p.RightLine && p.RightLine.set({ 'x2': p.left, 'y2': p.top });
+        p.LeftLine && p.LeftLine.set({ 'x1': p.left, 'y1': p.top });
+        updateLineList(p.lineIndex, p)
+        canF.renderAll();
+    });
+
+    function MakeLineAnnotation(index) {
+        var x1 = 250
+        var y1 = 250
+        var x2 = 400
+        var y2 = 250
+        lineTop = makeLine([x1, y1, x2, y2])
+        AnnoLineList.push({ MethodName: "Line", Unit: "percent", X1: x1 * ImageSize.widthPercent, Y1: y1 * ImageSize.heightPercent, X2: x2 * ImageSize.widthPercent, Y2: y2 * ImageSize.heightPercent })
+        circleL = makeCircle(lineTop.get('x1'), lineTop.get('y1'), index, "LeftLine")
+        circleR = makeCircle(lineTop.get('x2'), lineTop.get('y2'), index, "RightLine")
+        canF.add(circleL, circleR);
+        canF.add(lineTop);
+    }
+
+    function updateLineList(index, p ) {
+        p.RightLine && assignRight()
+        p.LeftLine && assignLeft()
+
+        function assignRight() {
+            AnnoLineList[index].Y2 = p.RightLine.y2 * ImageSize["heightPercent"]
+            AnnoLineList[index].X2 = p.RightLine.x2 * ImageSize["widthPercent"]
+        }
+
+        function assignLeft() {
+            AnnoLineList[index].Y1 = p.LeftLine.y1 * ImageSize["heightPercent"]
+            AnnoLineList[index].X1 = p.LeftLine.x1 * ImageSize["widthPercent"]
+
+        }
+    }
 
     function makeLine(coords) {
         const Line = new fabric.Line(coords, {
-            fill: 'red',
-            stroke: 'red',
-            strokeWidth: 5,
+            fill: 'black',
+            stroke: 'black',
+            strokeWidth: 1,
             selectable: false,
             evented: false,
             offsetX: 10,
             original2: newXY(),
             original1: newXY()
-
         });
+        console.log(Line.original1)
         Line.original1.set({ x: Line.x1, y: Line.y1 })
         Line.original2.set({ x: Line.x2, y: Line.y2 })
         return Line
@@ -190,8 +150,9 @@
             OriTop: top,
             strokeWidth: 5,
             radius: radius,
-            fill: '#fff',
-            stroke: '#666',
+            fill: '#69b5e8',
+            opacity: 0.2,
+            stroke: '#69b5e8',
             lockSkewing: true,
             original1: newXY(),
             slideCircle: true,
@@ -202,10 +163,8 @@
 
         c["lineIndex"] = lineIndex
         c[name] = lineTop;
-        //c.lineTop = lineTop;
         return c;
     }
-
     function newXY() {
         return {
             x: 0,
@@ -216,67 +175,5 @@
             }
         }
     }
-
-    //var imgElement = document.getElementById('myImage');
-    //var imgInstance = new fabric.Image(imgElement, {
-    //    left: 0,
-    //    top: 0,
-    //    selectable: false,
-    //    evented: false,
-    //    //angle: ,
-    //    //opacity: 0.85,
-    //    //width: 200,
-    //});
-
-    ////imgInstance.scale(.5);
-    //console.log(imgInstance)
-    //canF.add(imgInstance);
-    //imgInstance.scaleToWidth(c.clientWidth);
-
-
-    //lineTop = makeLine([0, 0, 400, 0])
-    //canF.add(lineTop);
-
-    //function makeLine(coords) {
-    //    const Line = new fabric.Line(coords, {
-    //        fill: 'red',
-    //        stroke: 'red',
-    //        strokeWidth: 5,
-    //        selectable: true,
-    //        evented: true,
-    //        offsetX: 10,
-    //        original2: newXY(),
-    //        original1: newXY()
-
-    //    });
-    //    Line.original1.set({ x: Line.x1, y: Line.y1 })
-    //    Line.original2.set({ x: Line.x2, y: Line.y2 })
-    //    return Line
-    //}
-
-    //function newXY() {
-    //    return {
-    //        x: 0,
-    //        y: 0,
-    //        set(a) {
-    //            if (a.x) this.x = a.x;
-    //            if (a.y) this.y = a.y;
-    //        }
-    //    }
-    //}
-    //function te() {
-    //    ctx.fillRect(20, 20, 150, 100);
-    //    ctx.beginPath();
-    //    ctx.moveTo(0, 0);
-    //    ctx.lineTo(300, 150);
-    //    ctx.stroke();
-    //}
-    //var example = document.getElementById('image');
-    //example.onmousemove = function (e) {
-    //    var x = e.pageX - this.offsetLeft;
-    //    var y = e.pageY - this.offsetTop;
-    //}
-
-
 </script>
 }
