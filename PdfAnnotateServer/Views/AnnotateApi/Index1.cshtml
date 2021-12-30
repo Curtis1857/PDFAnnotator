@@ -1,6 +1,7 @@
 ﻿@model AnnotateIndexModel
-
+<input id="ListIndex" valur="0"/>
 <button type="button" id="AddLine" class="btn btn-success" data-line-Index="0" >Add Line</button>
+<button type="button" id="AddCircle" class="btn btn-success" data-line-Index="0" >Add Circle</button>
 <button type="button" id="save"> save</button>
 <canvas style="width: 80vw; height: 100vh" id="canvas"></canvas>
 <img id="myImage" style="display: none; width: 10vw;" src="@Url.Content($"~/Images/{Model.Path}" )" />
@@ -26,6 +27,8 @@
     //2: when moving around save location of line and name
     //3: send line location to server
     //4: convert values to unit and send through service
+
+    //make all annos use same list different index name try to reuse most on the logic
     var AnnoLineList = []
     var ImageSize = {}
 
@@ -87,40 +90,75 @@
         $target.attr("data-line-Index", annotateLineIndex + 1)
     })
 
+    $("#AddCircle").click((e) => {
+        var $target = $(e.target)
+        var annotateCircleIndex = Number($target.attr("data-line-Index"))
+    console.log("about to make")
+        makeCircle(annotateCircleIndex)
+        $target.attr("data-line-Index", annotateCircleIndex + 1)
+
+    })
+
     canF.on('object:moving', function (e) {
         var p = e.target;
 
         p.RightLine && p.RightLine.set({ 'x2': p.left, 'y2': p.top });
         p.LeftLine && p.LeftLine.set({ 'x1': p.left, 'y1': p.top });
-        updateLineList(p.lineIndex, p)
+        updateLineList(p)
         canF.renderAll();
     });
+
+    function makeCircle(index) {
+        console.log("start cirlce making")
+        var x1 = 250
+        var y1 = 250
+
+        var radius = 12
+        var c = new fabric.Circle({
+            left: x1,
+            top: y1,
+            OriTop: y1,
+            strokeWidth: 1,
+            radius: radius,
+            fill: 'transparent',
+            //opacity: 0.2,
+            stroke: 'black',
+            lockSkewing: true,
+            original1: newXY(),
+            slideCircle: true,
+        });
+
+        //c["IsCircle"] = true
+        c["CircleIndex"] = lineIndex
+        canF.add(c);
+
+    }
 
     function MakeLineAnnotation(index) {
         var x1 = 250
         var y1 = 250
         var x2 = 400
         var y2 = 250
-        lineTop = makeLine([x1, y1, x2, y2])
+        var lineTop = makeLine([x1, y1, x2, y2])
         AnnoLineList.push({ MethodName: "Line", Unit: "percent", X1: x1 * ImageSize.widthPercent, Y1: y1 * ImageSize.heightPercent, X2: x2 * ImageSize.widthPercent, Y2: y2 * ImageSize.heightPercent })
-        circleL = makeCircle(lineTop.get('x1'), lineTop.get('y1'), index, "LeftLine")
-        circleR = makeCircle(lineTop.get('x2'), lineTop.get('y2'), index, "RightLine")
+        circleL = makeLineHandleCircle(lineTop.get('x1'), lineTop.get('y1'), index, "LeftLine", lineTop)
+        circleR = makeLineHandleCircle(lineTop.get('x2'), lineTop.get('y2'), index, "RightLine", lineTop)
         canF.add(circleL, circleR);
         canF.add(lineTop);
     }
 
-    function updateLineList(index, p ) {
+    function updateLineList(p ) {
         p.RightLine && assignRight()
         p.LeftLine && assignLeft()
 
         function assignRight() {
-            AnnoLineList[index].Y2 = p.RightLine.y2 * ImageSize["heightPercent"]
-            AnnoLineList[index].X2 = p.RightLine.x2 * ImageSize["widthPercent"]
+            AnnoLineList[p.lineIndex].Y2 = p.RightLine.y2 * ImageSize["heightPercent"]
+            AnnoLineList[p.lineIndex].X2 = p.RightLine.x2 * ImageSize["widthPercent"]
         }
 
         function assignLeft() {
-            AnnoLineList[index].Y1 = p.LeftLine.y1 * ImageSize["heightPercent"]
-            AnnoLineList[index].X1 = p.LeftLine.x1 * ImageSize["widthPercent"]
+            AnnoLineList[p.lineIndex].Y1 = p.LeftLine.y1 * ImageSize["heightPercent"]
+            AnnoLineList[p.lineIndex].X1 = p.LeftLine.x1 * ImageSize["widthPercent"]
 
         }
     }
@@ -136,13 +174,12 @@
             original2: newXY(),
             original1: newXY()
         });
-        console.log(Line.original1)
         Line.original1.set({ x: Line.x1, y: Line.y1 })
         Line.original2.set({ x: Line.x2, y: Line.y2 })
         return Line
     }
 
-    function makeCircle(left, top, lineIndex, name) {
+    function makeLineHandleCircle(left, top, lineIndex, name, lineTop) {
         var radius = 12
         var c = new fabric.Circle({
             left: left,
