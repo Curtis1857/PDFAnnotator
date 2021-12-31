@@ -35,10 +35,18 @@ fabric.Image.fromURL(imageName, function (oImg) {
     ImageSize["heightPercent"] = 1 / oImg.getScaledHeight()
     ImageSize["widthPercent"] = 1 / oImg.getScaledWidth()
 
+
+    //var text = canF.add(new fabric.Text('', {
+    //    left: 10, //Take the block's position
+    //    top: 10,
+    //    fill: 'black'
+    //}));
 }, {
     selectable: false,
     evented: false,
 });
+
+
 
 $("#save").click((e) => {
     var formData = new FormData();
@@ -64,16 +72,19 @@ $("#save").click((e) => {
 })
 
 $("#AddLine").click((e) => {
-    var annotateLineIndex = Number($("#ListIndex").val())
-    MakeLineAnnotation(annotateLineIndex)
-    $("#ListIndex").val(annotateLineIndex + 1)
+    MakeLineAnnotation(GetAndUpdateListIndex())  
 })
 
 $("#AddCircle").click((e) => {
-    var annotateCircleIndex = Number($("#ListIndex").val())
-    makeCircle(annotateCircleIndex)
-    $("#ListIndex").val(annotateCircleIndex + 1)
+    makeCircle(GetAndUpdateListIndex())
+})
 
+$("#AddText").click((e) => {
+    MakeTextAnnotation(GetAndUpdateListIndex())
+})
+
+$("#AddRectangle").click((e) => {
+    MakeRectangle(GetAndUpdateListIndex())
 })
 
 canF.on('object:moving', function (e) {
@@ -94,6 +105,46 @@ canF.on('object:moved', function (e) {
     console.log(AnnoLineList)
 });
 
+canF.on('text:editing:exited', function (e) {
+    var p = e.target;
+
+    console.log("selection:changed")
+    console.log(p.text)
+    console.log(p.InstructionIndex)
+    console.log(AnnoLineList)
+});
+
+//canF.on('text:selection:changed', function (e) {
+
+//    console.log("selection:changed")
+    
+//});
+
+//canF.on('text:event:changed', function (e) {
+
+//    console.log("event:changed")
+
+//});
+
+canF.on('text:editing:entered', function (e) {
+
+    console.log("editing:entered")
+    //disable save button here so cant rush save?
+
+});
+
+canF.on('text:editing:exited', function (e) {
+    var p = e.target
+    console.log("editing:exited")
+    console.log(p)
+    updateLineList(p)
+
+});
+
+//fabric.IText.prototype.onKeyDown = (function (e) {
+//    console.log("hey down")
+//    console.log(e)
+//})
 canF.on('object:scaled', function (e) {
     var p = e.target;
     p.IsCircle && resetCircleStroke()
@@ -116,6 +167,39 @@ canF.on('mouse:up', function (e) {
 
 });
 
+function MakeRectangle(index) {
+    var rect = new fabric.Rect({
+        top: 10,
+        left: 10,
+        width: 10,
+        height: 20,
+        fill: '#f55',
+        opacity: 0.7
+    });
+    rect.setControlVisible('mtr', false)
+    canF.add(rect)
+}
+function MakeTextAnnotation(index) {
+    var text = new fabric.IText('Text', {
+        fontFamily: 'arial',
+        fontSize: 16,
+        left: 10,
+        top: 10,
+    });
+    text.setControlVisible('mt', false)
+    text.setControlVisible('mb', false)
+    text.setControlVisible('mr', false)
+    text.setControlVisible('ml', false)
+    text.setControlVisible('bl', false)
+    text.setControlVisible('tl', false)
+    text.setControlVisible('br', false)
+    text.setControlVisible('tr', false)
+    text.setControlVisible('mtr', false)
+    text["IsText"] = true
+    text["InstructionIndex"] = index
+    AnnoLineList.push({ MethodName: "Write", Unit: "percent", X1: offSetTextX(text) * ImageSize.widthPercent, Y1: offSetTextY(text) * ImageSize.heightPercent, Text: text.text })
+    canF.add(text)
+}
 function makeCircle(index) {
     console.log("start cirlce making")
     var x1 = 250
@@ -168,27 +252,45 @@ function updateLineList(p) {
     p.RightLine && assignRight()
     p.LeftLine && assignLeft()
     p.IsCircle && assignCircle()
+    p.IsText && assignText()
 
     function assignRight() {
-        AnnoLineList[p.InstructionIndex].Y2 = p.RightLine.y2 * ImageSize["heightPercent"]
-        AnnoLineList[p.InstructionIndex].X2 = p.RightLine.x2 * ImageSize["widthPercent"]
+        AnnoLineList[p.InstructionIndex].Y2 = p.RightLine.y2 * ImageSize.heightPercent
+        AnnoLineList[p.InstructionIndex].X2 = p.RightLine.x2 * ImageSize.widthPercent
     }
 
     function assignLeft() {
         console.log(p.InstructionIndex)
-        AnnoLineList[p.InstructionIndex].Y1 = p.LeftLine.y1 * ImageSize["heightPercent"]
-        AnnoLineList[p.InstructionIndex].X1 = p.LeftLine.x1 * ImageSize["widthPercent"]
+        AnnoLineList[p.InstructionIndex].Y1 = p.LeftLine.y1 * ImageSize.heightPercent
+        AnnoLineList[p.InstructionIndex].X1 = p.LeftLine.x1 * ImageSize.widthPercent
 
     }
-
+    function assignText() {
+        AnnoLineList[p.InstructionIndex].X1 = offSetTextX(p) * ImageSize.widthPercent
+        AnnoLineList[p.InstructionIndex].Y1 = offSetTextY(p) * ImageSize.heightPercent
+        AnnoLineList[p.InstructionIndex].Text = p.text
+    
+    }
     function assignCircle() {
-        
         AnnoLineList[p.InstructionIndex].Y1 = p.top * ImageSize.heightPercent
         AnnoLineList[p.InstructionIndex].X1 = p.left * ImageSize.widthPercent
         AnnoLineList[p.InstructionIndex].Radius = (p.radius * p.scaleX) * ImageSize.widthPercent
     }
 }
 
+function offSetTextY(p) {
+    return p.top + (p.fontSize / 2)
+}
+
+function offSetTextX(p) {
+    return p.left - (p.width / 2)
+}
+
+function GetAndUpdateListIndex() {
+    var annotateIndex = Number($("#ListIndex").val())
+    $("#ListIndex").val(annotateIndex + 1)
+    return annotateIndex
+}
 function makeLine(coords) {
     const Line = new fabric.Line(coords, {
         fill: 'black',

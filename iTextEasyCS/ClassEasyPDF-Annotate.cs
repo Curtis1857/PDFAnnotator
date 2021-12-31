@@ -61,6 +61,7 @@ namespace iTextEasyCS
                         //x.Rectangle(false, inst.X1, inst.Y1, false, inst.X2, inst.Y2, 0, inst.Fill);
                         break;
                     case "Write":
+                        FontAlignment = TextAlignment.LeftBottom;
                         WriteAt(false, inst.X1, inst.Y1, inst.Text);
                         //x.WriteAt(false, inst.X1, inst.Y1, inst.Text);
                         break;
