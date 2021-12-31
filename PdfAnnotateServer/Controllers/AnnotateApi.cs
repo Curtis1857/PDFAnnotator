@@ -90,7 +90,14 @@ namespace PdfAnnotateServer.Controllers
             var widthInch = (reader.GetPageSize(1).Width / 72);
             var heigthInch = (reader.GetPageSize(1).Height / 72);
             //var newinstructions = instructions.Select(x => new AnnotateInstruction { X1 = x.X1 * widthInch, X2 = x.X2 * widthInch, Y1 = x.Y1 * heigthInch, Y2 = x.Y2 * heigthInch }).ToList();
-            instructions.ForEach(x => { x.X1 = x.X1 * widthInch; x.X2 = x.X2 * widthInch; x.Y1 = x.Y1 * heigthInch; x.Y2 = x.Y2 * heigthInch;});
+            instructions.ForEach(x => 
+                { 
+                    x.X1 *=  widthInch; 
+                    x.X2 *=  widthInch; 
+                    x.Y1 *= heigthInch; 
+                    x.Y2 *= heigthInch; 
+                    x.Radius *= widthInch; 
+                });
             //var instructions = new List<AnnotateInstruction> {
             //    new AnnotateInstruction{ MethodName ="Line", X1 = .1f, Y1 = .1f, X2 = 4, Y2 = 4 },
             //    new AnnotateInstruction{ MethodName = "Write",  X1 = .1f, Y1 = 1f, Text = "this is fucking awesome" }
