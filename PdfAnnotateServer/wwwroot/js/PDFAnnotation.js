@@ -147,7 +147,7 @@ canF.on('text:editing:exited', function (e) {
 //})
 canF.on('object:scaled', function (e) {
     var p = e.target;
-    p.IsCircle && resetCircleStroke()
+    p.strokeWidth && p.SetStrokeWidth && resetCircleStroke()
     updateLineList(p)
 
     function resetCircleStroke(){
@@ -169,16 +169,39 @@ canF.on('mouse:up', function (e) {
 
 function MakeRectangle(index) {
     var rect = new fabric.Rect({
-        top: 10,
-        left: 10,
+        top: 50,
+        left: 50,
         width: 10,
         height: 20,
-        fill: '#f55',
-        opacity: 0.7
+        strokeWidth: 1,
+        SetStrokeWidth: 1,
+        fill: 'transparent',
+        stroke: 'black',
+        //fill: '#f55',
+        //opacity: 0.7
     });
+    rect["InstructionIndex"] = index
+    rect["IsRectangle"] = true
     rect.setControlVisible('mtr', false)
+    AnnoLineList.push({ MethodName: "Rectangle", Unit: "percent", X1: offSetX1(rect) * ImageSize.widthPercent, Y1: offSetY1(rect) * ImageSize.heightPercent, X2: offSetX2(rect) * ImageSize.widthPercent, Y2: offSetY2(rect) * ImageSize.heightPercent })
     canF.add(rect)
 }
+function offSetX1(p) {
+    return p.left - ((p.width * p.scaleX) / 2)
+}
+
+function offSetY1(p) {
+    return p.top - ((p.height * p.scaleY) / 2)
+}
+
+function offSetX2(p) {
+    return p.left + ((p.width * p.scaleX) / 2)
+}
+
+function offSetY2(p) {
+    return p.top + ((p.height * p.scaleY) / 2)
+}
+
 function MakeTextAnnotation(index) {
     var text = new fabric.IText('Text', {
         fontFamily: 'arial',
@@ -253,6 +276,14 @@ function updateLineList(p) {
     p.LeftLine && assignLeft()
     p.IsCircle && assignCircle()
     p.IsText && assignText()
+    p.IsRectangle && assignRectangle()
+
+    function assignRectangle() {
+        AnnoLineList[p.InstructionIndex].Y1 = offSetY1(p) * ImageSize.heightPercent
+        AnnoLineList[p.InstructionIndex].X1 = offSetX1(p) * ImageSize.widthPercent
+        AnnoLineList[p.InstructionIndex].Y2 = offSetY2(p) * ImageSize.heightPercent
+        AnnoLineList[p.InstructionIndex].X2 = offSetX2(p) * ImageSize.widthPercent
+    }
 
     function assignRight() {
         AnnoLineList[p.InstructionIndex].Y2 = p.RightLine.y2 * ImageSize.heightPercent
