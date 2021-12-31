@@ -1,7 +1,9 @@
 ﻿@model AnnotateIndexModel
-<input id="ListIndex" value="0"/>
+<input id="ListIndex" value="0" type=""/>
 <button type="button" id="AddLine" class="btn btn-success" data-line-Index="0" >Add Line</button>
 <button type="button" id="AddCircle" class="btn btn-success" data-line-Index="0" >Add Circle</button>
+<button type="button" id="AddText" class="btn btn-success" data-line-Index="0" >Add Text</button>
+<button type="button" id="AddRectangle" class="btn btn-success" data-line-Index="0">Add Rectangle</button>
 <button type="button" id="save"> save</button>
 <canvas style="width: 80vw; height: 100vh" id="canvas"></canvas>
 <img id="myImage" style="display: none; width: 10vw;" src="@Url.Content($"~/Images/{Model.Path}" )" />
