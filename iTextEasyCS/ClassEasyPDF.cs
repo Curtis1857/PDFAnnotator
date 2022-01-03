@@ -433,10 +433,10 @@ namespace iTextEasyCS
                 s = s | iTextSharp.text.Font.STRIKETHRU;
 
             //if font doesnt exist then throws error
-            if (!FontFactory.IsRegistered(font.OriginalFontName)) {
-                throw new ArgumentNullException($"{font.OriginalFontName} doesnt exist please register using RegisterFont");
-                //var t = FontFactory.RegisteredFonts;
-            }
+            //if (!FontFactory.IsRegistered(font.OriginalFontName)) {
+            //    throw new ArgumentNullException($"{font.OriginalFontName} doesnt exist please register using RegisterFont");
+            //    //var t = FontFactory.RegisteredFonts;
+            //}
 
             f = FontFactory.GetFont(font.OriginalFontName, BaseFont.CP1252, true, font.SizeInPoints, s, _GetColor(ForeColor));
             return f;

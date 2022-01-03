@@ -14,15 +14,40 @@ fabric.Image.fromURL(imageName, function (oImg) {
 
     //scalels image to fit window and centers
     var hundredPercent = 1 / oImg.getScaledWidth()
+
+
+    console.log("original width: " + oImg.width)
+    
+    //this is 11 point or 10 point
+    //var LetterPerLine = 126
+
+
+    //hard code 
+    //pixel in 8 font
+    //pixel in 10 font
+    //pixel in 12 font
+    //pixel in 16 font
+    //pixel in 20 font
+    
+    //for font size 12
+    var LetterPerLine = 97.3
+    var letterWidth = LetterPerLine / 2
+    //leterPerline is amount of letter written on a line using font 12
+    //fabric.js needs font width to calc font size and does not recognize decimal 
+
     oImg.scale(hundredPercent * c.clientWidth)
     oImg.set({ left: oImg.getScaledWidth() / 2, top: oImg.getScaledHeight() / 2 });
     canF.add(oImg);
+
+    var pixelFontSize = oImg.getScaledWidth() / letterWidth
 
     //all cordinates are 0 - 1 based off percentages
     ImageSize["width"] = oImg.getScaledWidth()
     ImageSize["height"] = oImg.getScaledHeight()
     ImageSize["heightPercent"] = 1 / oImg.getScaledHeight()
     ImageSize["widthPercent"] = 1 / oImg.getScaledWidth()
+    ImageSize["Img"] = oImg
+    ImageSize["ScaledFontWidth"] = pixelFontSize
 
 }, {
     selectable: false,
@@ -158,11 +183,13 @@ function MakeRectangle(index) {
     }
 }
 function MakeTextAnnotation(index) {
-    var text = new fabric.IText('Text', {
-        fontFamily: 'helvetica',
-        fontSize: 16,
-        left: 10,
-        top: 10,
+
+
+    var text = new fabric.IText('Payment method', {
+        fontFamily: 'Cambria',
+        fontSize: ImageSize["ScaledFontWidth"],
+        left: 20,
+        top: 20,
     });
 
     text.setControlVisible('mt', false)
@@ -290,13 +317,24 @@ function MakeLineAnnotation(index) {
             strokeWidth: 5,
             radius: radius,
             fill: '#69b5e8',
-            opacity: 0.2,
+            opacity: 0,
             stroke: '#69b5e8',
             lockSkewing: true,
             slideCircle: true,
             hasBorders: false
         });
 
+        c.setControlVisible('mt', false)
+        c.setControlVisible('mb', false)
+        c.setControlVisible('mr', false)
+        c.setControlVisible('ml', false)
+
+        c.setControlVisible('tl', false)
+        c.setControlVisible('bl', false)
+        c.setControlVisible('tr', false)
+        c.setControlVisible('br', false)
+        //c.setControlVisible('ml', false)
+        c.setControlVisible('mtr', false)
 
         c["InstructionIndex"] = lineIndex
         c["RefLine"] = lineTop;
