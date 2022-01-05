@@ -62,8 +62,15 @@ namespace iTextEasyCS
                         break;
                     case "Write":
                         FontAlignment = TextAlignment.LeftBottom;
-                        WriteAt(false, inst.X1, inst.Y1, inst.Text);
-                        //x.WriteAt(false, inst.X1, inst.Y1, inst.Text);
+                                                
+                        var lines = inst.Text.Split("\n");
+                        CurrentX = inst.X1;
+                        CurrentY = inst.Y1;
+                        foreach (var line in lines)
+                        {
+                            Write(line, true);
+                        }
+
                         break;
                 }
             }

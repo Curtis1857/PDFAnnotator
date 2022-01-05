@@ -17,7 +17,7 @@ namespace PdfAnnotateServer.Controllers
     {
         public IActionResult Index1()
         {
-            var inputPdfPath = @"C:\Users\curti\source\repos\PDFAnnotator\PdfAnnotateServer\PDfs\order_6.pdf";
+            var inputPdfPath = @"C:\Users\curti\source\repos\PDFAnnotator\PdfAnnotatorEasy\Pdfs\order_6Temp3.pdf";
             string outputPath = @"C:\Users\curti\source\repos\PDFAnnotator\PdfAnnotateServer\wwwroot\Images";
             int desired_dpi = 300;
             var path = new AnnotateIndexModel();
@@ -82,8 +82,8 @@ namespace PdfAnnotateServer.Controllers
         public IActionResult AnnotatePdfPercentCords(List<AnnotateInstruction> instructions)
         {
 
-            var oldPath = @"C:\Users\curti\source\repos\PDFAnnotator\PdfAnnotatorEasy\Pdfs\order_6.pdf";
-            var newPath = @"C:\Users\curti\source\repos\PDFAnnotator\PdfAnnotatorEasy\Pdfs\order_6Temp3.pdf";
+            var oldPath = @"C:\Users\curti\source\repos\PDFAnnotator\PdfAnnotatorEasy\Pdfs\order_6Temp3.pdf";
+            var newPath = @"C:\Users\curti\source\repos\PDFAnnotator\PdfAnnotatorEasy\Pdfs\order_6Temp4.pdf";
             PdfReader reader = new PdfReader(oldPath);
             var x = new PDFWriter();
             x.ScaleMode = ScaleModes.Inches;
@@ -102,7 +102,7 @@ namespace PdfAnnotateServer.Controllers
             //    new AnnotateInstruction{ MethodName ="Line", X1 = .1f, Y1 = .1f, X2 = 4, Y2 = 4 },
             //    new AnnotateInstruction{ MethodName = "Write",  X1 = .1f, Y1 = 1f, Text = "this is fucking awesome" }
             //};
-
+            x.RegisterFont("CAMBRIA", "C:\\Windows\\fonts\\Cambria.ttc");
             x.AnnotatePdf(oldPath, newPath, instructions);
             return View();
         }

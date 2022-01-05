@@ -6,7 +6,9 @@ namespace iTextEasyCS
 {
     partial class PDFWriter
     {
-        public System.Drawing.Font Font = new System.Drawing.Font("helvetica", 12);
+        //public System.Drawing.Font Font = new System.Drawing.Font("helvetica", 12);
+        //public System.Drawing.Font Font = new System.Drawing.Font("arial", 12);
+        public System.Drawing.Font Font = new System.Drawing.Font("CAMBRIA", 12);
         
         public TextAlignment FontAlignment = TextAlignment.LeftBaseline;
         public float FontLineSpacing = 1f;
