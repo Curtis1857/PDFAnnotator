@@ -16,7 +16,6 @@ fabric.Image.fromURL(imageName, function (oImg) {
     var hundredPercent = 1 / oImg.getScaledWidth()
 
 
-    console.log("original width: " + oImg.width)
     
     //this is 11 point or 10 point
     //var LetterPerLine = 126
@@ -30,16 +29,22 @@ fabric.Image.fromURL(imageName, function (oImg) {
     //pixel in 20 font
     
     //for font size 12
-    var LetterPerLine = 97.3
-    var letterWidth = LetterPerLine / 2
+    //var LetterPerLine = 97.3
+
+    //for 12 font should handle landscape
+    var LetterPerLine = oImg.width / 25.477903391572458
+    var HalfLetterPerLine = LetterPerLine / 2
     //leterPerline is amount of letter written on a line using font 12
     //fabric.js needs font width to calc font size and does not recognize decimal 
+    var letterWidth = oImg.width / LetterPerLine
+    console.log("original width: " + oImg.width)
+    console.log("letterwidth: " + letterWidth)
 
     oImg.scale(hundredPercent * c.clientWidth)
     oImg.set({ left: oImg.getScaledWidth() / 2, top: oImg.getScaledHeight() / 2 });
     canF.add(oImg);
 
-    var pixelFontSize = oImg.getScaledWidth() / letterWidth
+    var pixelFontSize = oImg.getScaledWidth() / HalfLetterPerLine
 
     //all cordinates are 0 - 1 based off percentages
     ImageSize["width"] = oImg.getScaledWidth()
