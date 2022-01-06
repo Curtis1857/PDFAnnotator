@@ -1,75 +1,40 @@
-﻿using System;
+﻿using iTextSharp.text;
+using iTextSharp.text.pdf;
+using Shane32.EasyPDF;
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using iTextEasyCS;
-using iTextSharp.text;
-using iTextSharp.text.pdf;
+
 
 namespace PDFAnnotator
 {
     class Program
     {
         static void Main(string[] args)
-        {
-            //var oldPath = @"C:\Users\curti\source\repos\PDFAnnotator\PdfAnnotatorEasy\Pdfs\order_6.pdf";
-            var oldPath = @"C:\Users\curti\source\repos\PDFAnnotator\PdfAnnotateServer\PDfs\order_6.pdf";
-            quiryPdf();
-            return;
-            var newPath = @"C:\Users\curti\source\repos\PDFAnnotator\PdfAnnotatorEasy\Pdfs\order_6Temp3.pdf";
-            var x = new iTextEasyCS.PDFWriter();
+        {       
+            var oldPath = @"C:\Users\Curtis\Source\Repos\PDFAnnotator\PdfAnnotatorEasy\Pdfs\order_6Temp5.pdf";
+            var newPath = @"C:\Users\Curtis\Source\Repos\PDFAnnotator\PdfAnnotatorEasy\Pdfs\order_6Temp6.pdf";
+
+            var reader = new PdfReader(oldPath);
+            var x = new PDFWriter(newPath);
             x.ScaleMode = ScaleModes.Inches;
-            x.AnnotatePage(oldPath, newPath);
+
+            x.AnnotatePage(reader);
             
             x.Line(false, .1f, .1f, false, 2, 2);
             x.Circle(false, 1, 1, 1);
 
-            x.ForeColor = System.Drawing.Color.Black;
-            x.FillColor = System.Drawing.Color.Red;
+            x.ForeColor = System.Drawing.Color.Red;
+            x.FillColor = System.Drawing.Color.Green;
             x.Rectangle(false, 1, 1, false, 2, 2, 0, true);
 
             x.WriteAt(false, 1, 2, "cat man do");
 
             x.ForeColor = System.Drawing.Color.Blue;
-            //x.Arrow(false, 3,3, true, 0,1);
-            //circle
-            //words
-            //line
-            //rectangle
-            //do arrow latter
-            //arrow
-            //color lines text
 
-
-            //x.BezierTo(1, 1, 2, 2);
-            //x.BeginText();
-            //var bf = FontFactory.GetFont(BaseFont.HELVETICA, BaseFont.WINANSI, BaseFont.NOT_EMBEDDED, 14);
-
-            //over.SetFontAndSize(bf.BaseFont, 18);
-            //over.SetTextMatrix(30, 30);
-            //over.ShowText("page " + 1);
-            //over.EndText();
             x.Close();
-            //stamper.Close();
             return;
 
-
-            //quiryPdf();
-            //var (stamper, reader) = createStamper();
-            //addText(stamper);
-
-            //updatePDFProps(stamper, reader);
-            //var path = @"C:\Users\curti\source\repos\PDFEditor\PDFEditor\Pdfs\Arduino.pdf";
-            //PdfReader reader = new PdfReader(path);
-
-            //var stream = System.IO.File.Create(@"C:\Users\curti\source\repos\PDFEditor\PDFEditor\Pdfs\ArduinoEdit.pdf");
-            //PdfStamper stamper = new PdfStamper(reader, stream);
-            ////stamper.setRotateContents(false);
-            //var anoo = new PdfAnnotation().
-            //stamper.AddAnnotation(, 1)
-            //PdfContentByte canvas = stamper.getOverContent(1);
-            //ColumnText.showTextAligned(canvas,
-            // Element.ALIGN_LEFT, new Phrase("Hello people!"), 36, 540, 0);
-            //stamper.close();
             var colorDictionary = new Dictionary<string, System.Drawing.Color>
             {
                 { "Red", System.Drawing.Color.Red },
@@ -79,9 +44,10 @@ namespace PDFAnnotator
 
               void AnnotatePdf(string originalFile, string annotatedfile, List<AnnotateInstruction> Instructions)
             {
-                var x = new iTextEasyCS.PDFWriter();
+                var stream = System.IO.File.Create(newPath);
+                var x = new PDFWriter(stream);
                 x.ScaleMode = ScaleModes.Inches;
-                x.AnnotatePage(originalFile, annotatedfile);
+                x.AnnotatePage(originalFile);
                 foreach (var inst in Instructions)
                 {
 
@@ -153,7 +119,7 @@ namespace PDFAnnotator
                 over.SetTextMatrix(30, 30);
                 over.ShowText("page " + 1);
                 over.EndText();
-                over.SetRGBColorStroke(0xFF, 0x00, 0x00);
+                over.SetRgbColorStroke(0xFF, 0x00, 0x00);
                 over.SetLineWidth(5f);
                 over.Ellipse(250, 450, 350, 550);
                 over.Stroke();

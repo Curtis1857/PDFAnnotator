@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\iTextEasyCS\iTextEasyCS.csproj" />
+    <ProjectReference Include="..\..\EasyPDF\src\EasyPDF\Shane32.EasyPDF.csproj" />
   </ItemGroup>
 
 </Project>
